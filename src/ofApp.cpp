@@ -27,6 +27,18 @@ void ofApp::update()
 {
 	grabber.update();
 
+	if (selection.empty())
+	{
+		cout << "No entry in the list.." << endl;
+	}
+	else 
+	{
+		for (int z = 0; z < selection.size(); z++)
+		{
+			cout << "List item [" << z << "]: " << selection[z] << endl;
+		}
+	}
+
 	if (grabber.isFrameNew())
 	{
 		RGB_IMAGE.setFromPixels(grabber.getPixels().getData(), gWidth, gHeight);
@@ -36,19 +48,23 @@ void ofApp::update()
 		HSV_IMAGE.convertRgbToHsv();
 		HSV_IMAGE.convertToGrayscalePlanarImages(hue, sat, val);
 
-		for (int i = 0; i < gWidth * gHeight; i++) // For each pixel..
+		
+		if (selection.size() != 0)
 		{
-			if (Selection.size() != 0)
+			for (int x = 0; x < selection.size(); x++)  // For each value in the selection list..
 			{
-				for (int x = 0; x < Selection.size(); x++)  // For each value in the selection list..
+				for (int i = 0; i < gWidth * gHeight; i++) // For each pixel..
 				{
-					if (ofInRange(hue.getPixels()[x], Selection[x] - margin, Selection[x] + margin)) // Within the range of 'margin'
+					if (ofInRange(hue.getPixels()[i], selection[x] - margin, selection[x] + margin)) // Within the range of 'margin'
 					{
-						filtered.getPixels()[x] = 255; // Make it white
+						filtered.getPixels()[i] = 255; // Make it white
 					}
 					else
 					{
-						filtered.getPixels()[x] = 0; // Or black..
+						if (x == 0)
+						{
+							filtered.getPixels()[i] = 0; // Or black..
+						}
 					}
 				}
 			}
@@ -60,16 +76,16 @@ void ofApp::update()
 	if (logList == 1)
 	{
 		cout << "okay..." << endl;
-		if (!Selection.size())
+		if (!selection.size())
 		{
 			cout << "list is empty!" << endl;
 		}
 		else
 		{
-			for (int i = 0; i < Selection.size(); i++)
+			for (int i = 0; i < selection.size(); i++)
 			{
-				cout << "selected hue [" << i << "]: )" << Selection[i] << endl;
-				if (i == Selection.size())
+				cout << "selected hue [" << i << "]: )" << selection[i] << endl;
+				if (i == selection.size())
 				{
 					logList != logList;
 				}
@@ -105,15 +121,16 @@ void ofApp::keyPressed(int key)
 {
 	if (key == 'c')
 	{
-		Selection.clear();
+		selection.clear();
 	}
 	if (key == 'x')
 	{
 		// Get current selection.;
-		currentSelection = hue.getPixels()[ofGetMouseY() * gWidth + ofGetMouseY()];
+		currentSelection = hue.getPixels()[ofGetMouseY() * gWidth + ofGetMouseX()];
 		// Append current selection to list.
-		Selection.push_back(currentSelection);
+		selection.push_back(currentSelection);
 	}
+
 	if (key == 'l') 
 	{
 		cout << "First Input:" << logList << endl;

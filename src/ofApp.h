@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "ofxOpenCV.h"
 
-static const int gWidth = 380 , gHeight = 240, margin = 3;
+static const int gWidth = 380 , gHeight = 240, margin = 2;
 
 class ofApp : public ofBaseApp{
 
@@ -27,13 +27,9 @@ class ofApp : public ofBaseApp{
 
 		ofTrueTypeFont font;
 
-		int currentSelection;
+		int currentSelection, logList;
 
-		vector <int> Selection;
+		vector<int> selection;
 
 		void keyPressed(int key);
-
-		int logList;
-
-		
 };
